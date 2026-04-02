@@ -24,12 +24,16 @@ const stepSound   = document.getElementById("stepSound");
 const shootSound  = document.getElementById("shootSound");
 const deathSound  = document.getElementById("deathSound");
 
-// === FULLSCREEN ===
+// === FULLSCREEN — canvas всегда равен размеру окна ===
 function resize() {
   canvas.width  = window.innerWidth;
   canvas.height = window.innerHeight;
+  // Переинициализируем матрицу при изменении размера
+  if (phase === "matrix" || phase === "start") initMatrix();
 }
 window.addEventListener("resize", resize);
+// Также обрабатываем поворот экрана на мобильных
+window.addEventListener("orientationchange", () => setTimeout(resize, 200));
 resize();
 
 // === СОСТОЯНИЕ ===
@@ -1328,43 +1332,37 @@ function choosePlatform(chosen) {
 
 // =========================================================
 // МОБИЛЬНЫЕ КНОПКИ
+// Позиционирование — чисто CSS (bottom/left/right через переменные).
+// JS только создаёт элементы и вешает обработчики.
 // =========================================================
-const MOB_SIZE = Math.max(68, Math.min(90, window.innerWidth * 0.14));  // адаптивный размер
-let mobBtns = [];   // созданные DOM-элементы
+let mobBtns = [];
+
+function getMobSize() {
+  // Должен совпадать с CSS --mob-size: clamp(60px, 13vw, 88px)
+  return Math.max(60, Math.min(88, window.innerWidth * 0.13));
+}
 
 function setupMobileControls() {
-  cleanupMobileControls();   // на всякий случай
-
-  const margin  = 18;
-  const btnSize = MOB_SIZE;
-  const bottom  = window.innerHeight - margin - btnSize;
+  cleanupMobileControls();
 
   // Стрельба: touchstart на canvas (не на кнопки)
   canvas.addEventListener("touchstart", onCanvasTouchShoot, { passive: false });
 
-  // Создаём кнопки
+  // Определения кнопок — позиция задаётся через id + CSS
   const defs = [
-    { id:"mob-left",   label:"◀", x: margin,                     y: bottom - btnSize - margin + btnSize,
-      down: () => { mobileLeft  = true;  }, up: () => { mobileLeft  = false; } },
-    { id:"mob-right",  label:"▶", x: margin + btnSize + margin,  y: bottom - btnSize - margin + btnSize,
-      down: () => { mobileRight = true;  }, up: () => { mobileRight = false; } },
-    { id:"mob-jump",   label:"▲", x: window.innerWidth  - margin - btnSize,        y: bottom,
-      down: () => { mobileJump = true;   }, up: () => {} },
-    { id:"mob-rewind", label:"⏎", x: window.innerWidth  - margin - btnSize * 2 - margin, y: bottom,
-      down: () => { mobileRewind = true; }, up: () => {} },
+    { id:"mob-left",   label:"◀", down: () => { mobileLeft  = true;  }, up: () => { mobileLeft  = false; } },
+    { id:"mob-right",  label:"▶", down: () => { mobileRight = true;  }, up: () => { mobileRight = false; } },
+    { id:"mob-jump",   label:"▲", down: () => { mobileJump  = true;  }, up: () => {} },
+    { id:"mob-rewind", label:"⏎", down: () => { mobileRewind = true; }, up: () => {} },
   ];
 
   defs.forEach(def => {
     const el = document.createElement("div");
-    el.id        = def.id;
-    el.className = "mob-btn";
+    el.id          = def.id;
+    el.className   = "mob-btn";
     el.textContent = def.label;
-    el.style.cssText = `
-      width:${btnSize}px; height:${btnSize}px;
-      left:${def.x}px; top:${def.y}px;
-    `;
+    // Никакого inline-стиля позиционирования — всё в CSS
 
-    // Обработка касаний
     const onDown = (e) => {
       e.preventDefault();
       if (!gameStarted || paused) return;
@@ -1380,10 +1378,9 @@ function setupMobileControls() {
     el.addEventListener("touchstart",  onDown, { passive: false });
     el.addEventListener("touchend",    onUp,   { passive: false });
     el.addEventListener("touchcancel", onUp,   { passive: false });
-    // Мышь тоже поддерживаем (для тестирования на ПК)
-    el.addEventListener("mousedown", onDown);
-    el.addEventListener("mouseup",   onUp);
-    el.addEventListener("mouseleave",onUp);
+    el.addEventListener("mousedown",   onDown);
+    el.addEventListener("mouseup",     onUp);
+    el.addEventListener("mouseleave",  onUp);
 
     document.body.appendChild(el);
     mobBtns.push(el);
