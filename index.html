@@ -1,73 +1,105 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>NEON FRACTURE</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+
+  <!-- ── Адаптивность ── -->
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0,
+                 maximum-scale=1.0, user-scalable=no,
+                 viewport-fit=cover">
+
+  <!-- ── PWA: общее ── -->
+  <meta name="application-name"  content="NEON FRACTURE">
+  <meta name="description"       content="Cyberpunk 2D platformer with time-rewind ability">
+  <meta name="theme-color"       content="#39FF14">
+
+  <!-- ── PWA: Android / Chrome ── -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="manifest.json">
+
+  <!-- ── PWA: iOS / Safari ── -->
+  <meta name="apple-mobile-web-app-capable"          content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title"            content="NEON FRACTURE">
+
+  <!-- iOS splash / icons -->
+  <link rel="apple-touch-icon"              href="icons/icon-192.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512.png">
+
+  <!-- ── PWA: Windows Tiles ── -->
+  <meta name="msapplication-TileColor" content="#000000">
+  <meta name="msapplication-TileImage" content="icons/icon-144.png">
+
+  <!-- ── Favicon ── -->
+  <link rel="icon"       type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="icon"       type="image/png" sizes="512x512" href="icons/icon-512.png">
+  <link rel="shortcut icon" href="icons/icon-96.png">
+
+  <title>NEON FRACTURE</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <!-- Canvas wrapper — centers the game field -->
 <div id="game-wrapper">
-    <canvas id="game"></canvas>
+  <canvas id="game"></canvas>
 </div>
 
 <!-- ── Главный стартовый экран ── -->
 <div id="startScreen">
-    <h1>NEON FRACTURE</h1>
-    <div class="btn" id="startBtn">INITIALIZE</div>
-    <div class="btn" id="settingsStartBtn">⚙ SETTINGS</div>
+  <h1>NEON FRACTURE</h1>
+  <div class="btn" id="startBtn">INITIALIZE</div>
+  <div class="btn" id="settingsStartBtn">⚙ SETTINGS</div>
 </div>
 
 <!-- ── Экран выбора платформы ── -->
 <div id="platformScreen">
-    <div class="platform-card">
-        <div class="platform-title">SELECT PLATFORM</div>
-        <div class="platform-sub">Choose your control scheme</div>
-        <div class="platform-options">
-            <div class="platform-btn" id="pcBtn">
-                <div class="platform-icon">🖥</div>
-                <div class="platform-label">PC</div>
-                <div class="platform-hint">Keyboard + Mouse</div>
-            </div>
-            <div class="platform-btn" id="mobileBtn">
-                <div class="platform-icon">📱</div>
-                <div class="platform-label">MOBILE</div>
-                <div class="platform-hint">Touch Controls</div>
-            </div>
-        </div>
+  <div class="platform-card">
+    <div class="platform-title">SELECT PLATFORM</div>
+    <div class="platform-sub">Choose your control scheme</div>
+    <div class="platform-options">
+      <div class="platform-btn" id="pcBtn">
+        <div class="platform-icon">🖥</div>
+        <div class="platform-label">PC</div>
+        <div class="platform-hint">Keyboard + Mouse</div>
+      </div>
+      <div class="platform-btn" id="mobileBtn">
+        <div class="platform-icon">📱</div>
+        <div class="platform-label">MOBILE</div>
+        <div class="platform-hint">Touch Controls</div>
+      </div>
     </div>
+  </div>
 </div>
 
 <div id="introText"></div>
 
 <!-- ── Пауза ── -->
 <div id="pauseMenu">
-    <div class="pause-card">
-        <h2>SYSTEM PAUSED</h2>
-        <button id="resumeBtn">▶ CONTINUE</button>
-        <button id="settingsBtn">⚙ SETTINGS</button>
-        <button id="restartBtn">⟳ RESTART</button>
-        <button id="mainMenuBtn">⌂ MAIN MENU</button>
-    </div>
+  <div class="pause-card">
+    <h2>SYSTEM PAUSED</h2>
+    <button id="resumeBtn">▶ CONTINUE</button>
+    <button id="settingsBtn">⚙ SETTINGS</button>
+    <button id="restartBtn">⟳ RESTART</button>
+    <button id="mainMenuBtn">⌂ MAIN MENU</button>
+  </div>
 </div>
 
 <!-- ── Настройки ── -->
 <div id="settingsModal" style="display: none;">
-    <div class="settings-card">
-        <h3>AUDIO SETTINGS</h3>
-        <label>Music Volume</label>
-        <input type="range" id="musicVolume" min="0" max="1" step="0.01" value="1">
-        <label>SFX Volume</label>
-        <input type="range" id="sfxVolume" min="0" max="1" step="0.01" value="1">
-        <label>Mute All</label>
-        <input type="checkbox" id="muteCheckbox">
-        <button id="closeSettings">CLOSE</button>
-    </div>
+  <div class="settings-card">
+    <h3>AUDIO SETTINGS</h3>
+    <label>Music Volume</label>
+    <input type="range" id="musicVolume" min="0" max="1" step="0.01" value="1">
+    <label>SFX Volume</label>
+    <input type="range" id="sfxVolume" min="0" max="1" step="0.01" value="1">
+    <label>Mute All</label>
+    <input type="checkbox" id="muteCheckbox">
+    <button id="closeSettings">CLOSE</button>
+  </div>
 </div>
 
 <!-- ── Аудио ── -->
@@ -78,6 +110,37 @@
 <audio id="shootSound"  src="laser-shoot.wav"></audio>
 <audio id="deathSound"  src="explosion.wav"></audio>
 
+<!-- ── Игра ── -->
 <script src="game.js"></script>
+
+<!-- ── Service Worker: регистрация ── -->
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker
+        .register("./service-worker.js", { scope: "./" })
+        .then(reg => {
+          console.log("[PWA] Service Worker registered, scope:", reg.scope);
+
+          // Если есть обновление — применяем при следующем открытии
+          reg.addEventListener("updatefound", () => {
+            const newSW = reg.installing;
+            newSW.addEventListener("statechange", () => {
+              if (newSW.state === "installed" && navigator.serviceWorker.controller) {
+                console.log("[PWA] New version available — will apply on next launch");
+              }
+            });
+          });
+        })
+        .catch(err => console.warn("[PWA] SW registration failed:", err));
+    });
+
+    // Обновляем страницу когда новый SW берёт контроль
+    let refreshing = false;
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if (!refreshing) { refreshing = true; /* window.location.reload(); */ }
+    });
+  }
+</script>
 </body>
 </html>
