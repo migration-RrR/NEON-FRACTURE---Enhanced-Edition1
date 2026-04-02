@@ -2,11 +2,19 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NEON FRACTURE - Enhanced Edition</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>NEON FRACTURE</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+<!-- Canvas wrapper — centers the game field -->
+<div id="game-wrapper">
+    <canvas id="game"></canvas>
+</div>
 
 <!-- ── Главный стартовый экран ── -->
 <div id="startScreen">
@@ -15,7 +23,7 @@
     <div class="btn" id="settingsStartBtn">⚙ SETTINGS</div>
 </div>
 
-<!-- ── Экран выбора платформы (появляется после INITIALIZE) ── -->
+<!-- ── Экран выбора платформы ── -->
 <div id="platformScreen">
     <div class="platform-card">
         <div class="platform-title">SELECT PLATFORM</div>
@@ -36,7 +44,6 @@
 </div>
 
 <div id="introText"></div>
-<canvas id="game"></canvas>
 
 <!-- ── Пауза ── -->
 <div id="pauseMenu">
