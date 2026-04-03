@@ -28,13 +28,12 @@ const deathSound  = document.getElementById("deathSound");
 function resize() {
   canvas.width  = window.innerWidth;
   canvas.height = window.innerHeight;
-  // Переинициализируем матрицу при изменении размера
-  if (phase === "matrix" || phase === "start") initMatrix();
+  // initMatrix вызывается позже, после объявления
+  if (typeof initMatrix === "function") initMatrix();
 }
 window.addEventListener("resize", resize);
-// Также обрабатываем поворот экрана на мобильных
 window.addEventListener("orientationchange", () => setTimeout(resize, 200));
-resize();
+// НЕ вызываем resize() здесь — вызовем после объявления initMatrix
 
 // === СОСТОЯНИЕ ===
 let phase        = "start";
@@ -97,6 +96,10 @@ function initMatrix() {
   columns = Math.floor(canvas.width / fontSize);
   drops = Array.from({ length: columns }, () => Math.random() * (canvas.height / fontSize));
 }
+
+// Теперь можно безопасно задать размер canvas и инициализировать матрицу
+canvas.width  = window.innerWidth;
+canvas.height = window.innerHeight;
 initMatrix();
 
 function drawMatrix() {
@@ -1294,7 +1297,7 @@ function restartGame() {
   cleanupMobileControls();
   pauseMenu.style.display    = "none";
   platformScreen.style.display = "none";
-  introText.style.display    = "block";
+  introText.style.display    = "flex";
   introText.style.opacity    = "0";
   introText.textContent      = "";
   introText.classList.remove("glitch-text");
